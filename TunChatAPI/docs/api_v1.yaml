@@ -1,0 +1,2810 @@
+swagger: '2.0'
+info:
+  title: KetQua API
+  description: KetQua API
+  version: 1.0.0
+host: xosomega.mobi
+basePath: /api/v1/
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - multipart/form-data
+paths:
+  /provinces:
+    get:
+      description: get all provinces
+      operationId: province.index
+      parameters:
+        - name: region
+          in: query
+          description: region 1-mb, 2-mt , 3-mn
+          required: false
+          type: number
+      tags:
+        - metadata
+      responses:
+        '200':
+          description: get available provices
+          schema:
+            $ref: '#/definitions/Provinces'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /provinces/{id}:
+    get:
+      description: get province by id
+      operationId: province.show
+      parameters:
+        - name: id
+          in: path
+          description: id province
+          required: true
+          type: number
+      tags:
+        - metadata
+      responses:
+        '200':
+          description: get available Province
+          schema:
+            $ref: '#/definitions/Province'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /provinces/ngay-quay/{opendate}:
+    get:
+      description: get province by open date
+      operationId: province.getProvinceOpen
+      parameters:
+        - name: opendate
+          in: path
+          description: open date
+          required: true
+          type: string
+      tags:
+        - metadata
+      responses:
+        '200':
+          description: get available Province open by date
+          schema:
+            $ref: '#/definitions/Provinces'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /signup:
+    post:
+      description: Sign up new user.
+      operationId: userSignUp
+      parameters:
+        - name: email
+          in: formData
+          description: Email
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: Password
+          required: true
+          type: string
+        - name: name
+          in: formData
+          description: name
+          required: true
+          type: string
+      tags:
+        - authentication
+      responses:
+        '201':
+          description: registration successful
+          schema:
+            $ref: '#/definitions/AccessToken'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /signin:
+    post:
+      description: Sign in with oauth2 Resource Owner Password Credentials. ( Resource Owner Password Credentials Grant )
+      operationId: userSignIn
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: email
+          in: formData
+          description: use Email
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: Password
+          required: true
+          type: string
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: registration successful
+          schema:
+            $ref: '#/definitions/AccessToken'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /signin/facebook:
+    post:
+      description: Sign in with Facebook Token
+      operationId: facebookSignIn
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: facebook_token
+          in: formData
+          description: facebook token got at client
+          required: true
+          type: string
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: registration successful
+          schema:
+            $ref: '#/definitions/AccessToken'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /forgot-password:
+    post:
+      description: User forgot password.
+      operationId: userForgetPassword
+      parameters:
+        - name: email
+          in: query
+          description: Email of user
+          required: true
+          type: string
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: 'email sent to user'
+          schema:
+            $ref: '#/definitions/Status'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  /signout:
+    post:
+      description: Sign out.
+      operationId: signOut
+      parameters: []
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: sign out successful
+          schema:
+            $ref: '#/definitions/Status'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /token/refresh:
+    post:
+      description: Sign out.
+      operationId: userSignOut
+      parameters:
+        - name: refresh_token
+          in: formData
+          description: refresh token
+          required: true
+          type: string
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: refresh successful
+          schema:
+            $ref: '#/definitions/AccessToken'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /device-notification-token:
+    post:
+      description: Set device Push notification token
+      operationId: addNotificationToken
+      parameters:
+        - name: token
+          in: formData
+          description: device Push notification token
+          required: true
+          type: string
+        - name: os
+          in: formData
+          description: os type in  (ios / android)
+          required: true
+          type: string
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: refresh successful
+          schema:
+            $ref: '#/definitions/AccessToken'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /me:
+    get:
+      description: Get User Informations
+      operationId: getUserInfo
+      parameters: []
+      responses:
+        '200':
+          description: Successfully get user's informations
+          schema:
+            $ref: '#/definitions/Me'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+    put:
+      description: Update User Informations
+      operationId: putUserInfo
+      parameters:
+        - name: email
+          in: formData
+          description: Email
+          required: false
+          type: string
+        - name: password
+          in: formData
+          description: Password ( If not specified, System will not change password)
+          required: false
+          type: string
+        - name: name
+          in: formData
+          description: name
+          required: false
+          type: string
+        - name: phone_number
+          in: formData
+          description: name
+          required: false
+          type: string
+        - name: profile_image
+          in: formData
+          description: user's profile photo
+          required: false
+          type: file
+      responses:
+        '200':
+          description: Successfully update user's informations
+          schema:
+            $ref: '#/definitions/Me'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  /me/devices:
+      post:
+        description: Add device of the user
+        operationId: addMyDevices
+        parameters:
+          - name: token
+            in: formData
+            description: FCM/APN/GCM token to add
+            required: true
+            type: string
+          - name: type
+            in: formData
+            description: platform type ios/android/web
+            required: true
+            type: string
+        responses:
+          '201':
+            description: Successfully add event to interest list
+            schema:
+              $ref: '#/definitions/Status'
+          '400':
+            description: Error
+            schema:
+              $ref: '#/definitions/Status'
+  /users:
+    get:
+      operationId: getUsers
+      description: Find user
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: phone_number
+          in: query
+          description: phone number array
+          required: false
+          type: array
+          items:
+            type: string
+        - name: email
+          in: query
+          description: email array
+          required: false
+          type: array
+          items:
+            type: string
+        - name: query
+          in: query
+          description: keyword search
+          required: false
+          type: string
+      tags:
+        - users
+      responses:
+        '200':
+          description: user objects
+          schema:
+            $ref: '#/definitions/Users'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienBac':
+    get:
+      operationId: index
+      description: The list of ket qua
+      tags:
+        - ketQuaMienBac
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: date_from
+          in: query
+          description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+        - name: date_to
+          in: query
+          description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+      responses:
+        '200':
+          description: An array of KetQuaMienBacs
+          schema:
+            $ref: '#/definitions/KetquaMienbacs'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienBac/{id}':
+    get:
+      description: Get KetQuaMienBac Detail
+      operationId: show
+      tags:
+        - ketQuaMienBac
+      parameters:
+        - name: id
+          in: path
+          description: KetQuaMienBac ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: KetQuaMienBac object
+          schema:
+            $ref: '#/definitions/KetQuaMienBac'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienBac/ngay-quay/{date}/':
+    get:
+      description: Get KetQuaMienBac by 'ngay-quay'
+      operationId: showByDate
+      tags:
+        - ketQuaMienBac
+      parameters:
+        - name: date
+          in: path
+          description: Date open lottery formate 'Y-m-d'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: KetQuaMienBac object
+          schema:
+            $ref: '#/definitions/KetQuaMienBac'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienBac/do-so':
+    post:
+      description: Do so theo bo so & ngay quay?
+      operationId: checkResult
+      tags:
+        - ketQuaMienBac
+      parameters:
+        - name: bo_so
+          in: formData
+          description: bo so kiem tra
+          required: true
+          type: string
+        - name: ngay_quay
+          in: formData
+          description: ngay kiem tra format 'Y-m-d'
+          required: true
+          type: string
+        - name: province_id
+          in: formData
+          description: Province Id default 1
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Thong tin Do so
+          schema:
+            $ref: '#/definitions/DoSo'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienNam':
+    get:
+      operationId: indexMienNam
+      description: The list of ket qua
+      tags:
+        - ketQuaMienNam
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: date_from
+          in: query
+          description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+        - name: date_to
+          in: query
+          description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+      responses:
+        '200':
+          description: An array of KetQuaMienNam
+          schema:
+            $ref: '#/definitions/KetQuaMienNams'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienNam/{id}':
+    get:
+      description: Get KetQuaMienNam Detail
+      operationId: ketQuaMienNam.show
+      tags:
+        - ketQuaMienNam
+      parameters:
+        - name: id
+          in: path
+          description: KetQuaMienNam ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: KetQuaMienNam object
+          schema:
+            $ref: '#/definitions/KetQuaMienNam'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienNam/ngay-quay/{date}/':
+    get:
+      description: Get KetQuaMienNam by 'ngay-quay'
+      operationId: ketQuaMienNam.showByDate
+      tags:
+        - ketQuaMienNam
+      parameters:
+        - name: date
+          in: path
+          description: Date open lottery formate 'Y-m-d'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: KetQuaMienNam object
+          schema:
+            $ref: '#/definitions/KetQuaMienNam'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienNam/do-so':
+    post:
+      description: Do so theo bo so & ngay quay?
+      operationId: ketQuaMienNam.checkResult
+      tags:
+        - ketQuaMienNam
+      parameters:
+        - name: bo_so
+          in: formData
+          description: bo so kiem tra
+          required: true
+          type: string
+        - name: ngay_quay
+          in: formData
+          description: ngay kiem tra format 'Y-m-d'
+          required: true
+          type: string
+        - name: province_id
+          in: formData
+          description: Province Id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Thong tin Do so
+          schema:
+            $ref: '#/definitions/DoSo'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  /ketQuaMienTrung:
+    get:
+      operationId: ketQuaMienTrung.index
+      description: The list of ket qua
+      tags:
+        - ketQuaMienTrung
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: date_from
+          in: query
+          description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+        - name: date_to
+          in: query
+          description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+      responses:
+        '200':
+          description: An array of KetQuaMienTrung
+          schema:
+            $ref: '#/definitions/KetQuaMienTrungs'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienTrung/{id}':
+    get:
+      description: Get KetQuaMienTrung Detail
+      operationId: ketQuaMienTrung.show
+      tags:
+        - ketQuaMienTrung
+      parameters:
+        - name: id
+          in: path
+          description: KetQuaMienTrung ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: KetQuaMienTrung object
+          schema:
+            $ref: '#/definitions/KetQuaMienTrung'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienTrung/ngay-quay/{date}/':
+    get:
+      description: Get KetQuaMienTrung by 'ngay-quay'
+      operationId: ketQuaMienTrung.showByDate
+      tags:
+        - ketQuaMienTrung
+      parameters:
+        - name: date
+          in: path
+          description: Date open lottery formate 'Y-m-d'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: KetQuaMienTrung object
+          schema:
+            $ref: '#/definitions/KetQuaMienTrung'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMienTrung/do-so':
+    post:
+      description: Do so theo bo so & ngay quay?
+      operationId: ketQuaMienTrung.checkResult
+      tags:
+        - ketQuaMienTrung
+      parameters:
+        - name: bo_so
+          in: formData
+          description: bo so kiem tra
+          required: true
+          type: string
+        - name: ngay_quay
+          in: formData
+          description: ngay kiem tra format 'Y-m-d'
+          required: true
+          type: string
+        - name: province_id
+          in: formData
+          description: Province Id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Thong tin Do so
+          schema:
+            $ref: '#/definitions/DoSo'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMega645':
+    get:
+      operationId: ketQuaMega645.index
+      description: The list of ket qua mega 645
+      tags:
+        - ketQuaMega645
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: date_from
+          in: query
+          description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+        - name: date_to
+          in: query
+          description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+      responses:
+        '200':
+          description: An array of KetquaMega645
+          schema:
+            $ref: '#/definitions/KetquaMega645s'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMega645/{id}':
+    get:
+      description: Get KetquaMega645 Detail
+      operationId: ketQuaMega645.show
+      tags:
+        - ketQuaMega645
+      parameters:
+        - name: id
+          in: path
+          description: KetquaMega645 ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: KetquaMega645 object
+          schema:
+            $ref: '#/definitions/KetquaMega645'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMega645/ngay-quay/{date}/':
+    get:
+      description: Get KetquaMega645 by 'ngay-quay'
+      operationId: KetquaMega645.showByDate
+      tags:
+        - ketQuaMega645
+      parameters:
+        - name: date
+          in: path
+          description: Date open lottery formate 'Y-m-d'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: KetquaMega645 object
+          schema:
+            $ref: '#/definitions/KetquaMega645'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMax4d':
+    get:
+      operationId: ketQuaMax4d.index
+      description: The list of ket qua mega 645
+      tags:
+        - ketQuaMax4d
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: date_from
+          in: query
+          description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+        - name: date_to
+          in: query
+          description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+      responses:
+        '200':
+          description: An array of KetQuaMax4d
+          schema:
+            $ref: '#/definitions/KetQuaMax4ds'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMax4d/{id}':
+    get:
+      description: Get KetQuaMax4d Detail
+      operationId: KetQuaMax4d.show
+      tags:
+        - ketQuaMax4d
+      parameters:
+        - name: id
+          in: path
+          description: KetQuaMax4d ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: KetQuaMax4d object
+          schema:
+            $ref: '#/definitions/KetQuaMax4d'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaMax4d/ngay-quay/{date}/':
+    get:
+      description: Get KetQuaMax4d by 'ngay-quay'
+      operationId: KetQuaMax4d.showByDate
+      tags:
+        - ketQuaMax4d
+      parameters:
+        - name: date
+          in: path
+          description: Date open lottery formate 'Y-m-d'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: KetQuaMax4d object
+          schema:
+            $ref: '#/definitions/KetQuaMax4d'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaThanTai':
+    get:
+      operationId: KetQuaThanTai.index
+      description: The list of ket qua mega 645
+      tags:
+        - ketQuaThanTai
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: date_from
+          in: query
+          description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+        - name: date_to
+          in: query
+          description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+      responses:
+        '200':
+          description: An array of KetQuaThanTai
+          schema:
+            $ref: '#/definitions/KetQuaThanTais'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaThanTai/{id}':
+    get:
+      description: Get KetQuaThanTai Detail
+      operationId: KetQuaThanTai.show
+      tags:
+        - ketQuaThanTai
+      parameters:
+        - name: id
+          in: path
+          description: KetQuaThanTai ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: KetQuaThanTai object
+          schema:
+            $ref: '#/definitions/KetQuaThanTai'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaThanTai/ngay-quay/{date}/':
+    get:
+      description: Get KetQuaThanTai by 'ngay-quay'
+      operationId: KetQuaThanTai.showByDate
+      tags:
+        - ketQuaThanTai
+      parameters:
+        - name: date
+          in: path
+          description: Date open lottery formate 'Y-m-d'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: KetQuaThanTai object
+          schema:
+            $ref: '#/definitions/KetQuaThanTai'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaDienToan123':
+    get:
+      operationId: KetQuaDienToan123.index
+      description: The list of ket qua mega 645
+      tags:
+        - ketQuaDienToan123
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: date_from
+          in: query
+          description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+        - name: date_to
+          in: query
+          description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+      responses:
+        '200':
+          description: An array of KetQuaDienToan123
+          schema:
+            $ref: '#/definitions/KetQuaDienToan123s'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaDienToan123/{id}':
+    get:
+      description: Get KetQuaDienToan123 Detail
+      operationId: KetQuaDienToan123.show
+      tags:
+        - ketQuaDienToan123
+      parameters:
+        - name: id
+          in: path
+          description: KetQuaDienToan123 ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: KetQuaDienToan123 object
+          schema:
+            $ref: '#/definitions/KetQuaDienToan123'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaDienToan123/ngay-quay/{date}/':
+    get:
+      description: Get KetQuaDienToan123 by 'ngay-quay'
+      operationId: KetQuaDienToan123.showByDate
+      tags:
+        - ketQuaDienToan123
+      parameters:
+        - name: date
+          in: path
+          description: Date open lottery formate 'Y-m-d'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: KetQuaDienToan123 object
+          schema:
+            $ref: '#/definitions/KetQuaDienToan123'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaDienToan6x36':
+    get:
+      operationId: KetQuaDienToan6x36.index
+      description: The list of ket qua mega 645
+      tags:
+        - ketQuaDienToan6x36
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: Data number for data query. default value is 10
+          required: false
+          type: integer
+        - name: date_from
+          in: query
+          description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+        - name: date_to
+          in: query
+          description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+          required: false
+          type: string
+      responses:
+        '200':
+          description: An array of KetQuaDienToan6x36
+          schema:
+            $ref: '#/definitions/KetQuaDienToan6x36s'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaDienToan6x36/{id}':
+    get:
+      description: Get KetQuaDienToan6x36 Detail
+      operationId: KetQuaDienToan6x36.show
+      tags:
+        - ketQuaDienToan6x36
+      parameters:
+        - name: id
+          in: path
+          description: KetQuaDienToan6x36 ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: KetQuaDienToan6x36 object
+          schema:
+            $ref: '#/definitions/KetQuaDienToan6x36'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQuaDienToan6x36/ngay-quay/{date}/':
+    get:
+      description: Get KetQuaDienToan6x36 by 'ngay-quay'
+      operationId: KetQuaDienToan6x36.showByDate
+      tags:
+        - ketQuaDienToan6x36
+      parameters:
+        - name: date
+          in: path
+          description: Date open lottery formate 'Y-m-d'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: KetQuaDienToan6x36 object
+          schema:
+            $ref: '#/definitions/KetQuaDienToan6x36'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Status'
+  '/ketQua':
+      get:
+        operationId: ketqua.index
+        description: The list of ket qua
+        tags:
+          - soKetQua
+        parameters:
+          - name: offset
+            in: query
+            description: Offset value for data query. default value is 0
+            required: false
+            type: integer
+          - name: limit
+            in: query
+            description: Data number for data query. default value is 10
+            required: false
+            type: integer
+          - name: date_from
+            in: query
+            description: start time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+            required: false
+            type: string
+          - name: date_to
+            in: query
+            description: End time get lottery Mien Bac format 'Y-m-d' vd 2017-08-01
+            required: false
+            type: string
+          - name: province_id
+            in: query
+            description: Ma tinh thanh
+            required: true
+            type: integer
+        responses:
+          '200':
+            description: An array of KetQuaMienBacs, KetQuaMienNams, KetQuaMienTrungs
+            schema:
+              $ref: '#/definitions/KetquaMienbacs'
+          '400':
+            description: Error
+            schema:
+              $ref: '#/definitions/Status'
+  '/doSo':
+      post:
+        description: Do so theo bo so & ngay quay?
+        operationId: ketqua.checkResult
+        tags:
+          - doSo
+        parameters:
+          - name: bo_so
+            in: formData
+            description: bo so kiem tra
+            required: true
+            type: string
+          - name: ngay_quay
+            in: formData
+            description: ngay kiem tra format 'Y-m-d'
+            required: true
+            type: string
+          - name: province_id
+            in: formData
+            description: Province Id default 1
+            required: true
+            type: integer
+        responses:
+          '200':
+            description: Thong tin Do so
+            schema:
+              $ref: '#/definitions/DoSo'
+          default:
+            description: Unexpected error
+            schema:
+              $ref: '#/definitions/Status'
+  '/thongKe/boSoRaNhieu/':
+    get:
+      description: Thong ke bo so ra nhieu
+      operationId: getBoSoRaNhieu
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+      responses:
+          '200':
+            description:  List BoSoXuatHien object
+            schema:
+              $ref: '#/definitions/BoSoXuatHiens'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoRaIt/':
+    get:
+      description: Thong ke bo so ra it
+      operationId: boSoRaIt
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+      responses:
+          '200':
+            description:  List BoSoXuatHien object
+            schema:
+              $ref: '#/definitions/BoSoXuatHiens'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/dauSo/':
+    get:
+      description: Thong ke dau so ra nhieu
+      operationId: getDauSo
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+      responses:
+          '200':
+            description:  List DauSoXuatHien object
+            schema:
+              $ref: '#/definitions/DauSoXuatHiens'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/ditSo/':
+    get:
+      description: Thong ke dit so ra nhieu
+      operationId: getDitSo
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+      responses:
+          '200':
+            description:  List DitSoXuatHien object
+            schema:
+              $ref: '#/definitions/DitSoXuatHiens'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/lotoGan/':
+    get:
+      description: Thong ke bo so gan
+      operationId: getBoSoGan
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+      responses:
+          '200':
+            description:  List BoSoGan object
+            schema:
+              $ref: '#/definitions/BoSoGans'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/dauSoDangBang/':
+    get:
+      description: Thong ke dau so dang bang
+      operationId: getDauSoDangBang
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List DauSoDangBang object
+            schema:
+              $ref: '#/definitions/DauSoDangBangs'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/ditSoDangBang/':
+    get:
+      description: Thong ke dit so dang bang
+      operationId: getDitSoDangBang
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List DitSoDangBang object
+            schema:
+              $ref: '#/definitions/DitSoDangBangs'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoKep/':
+    get:
+      description: Thong ke bo so kep
+      operationId: getBoSoKep
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List BoSoKeps object
+            schema:
+              $ref: '#/definitions/BoSoKeps'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoSatKep/':
+    get:
+      description: Thong ke bo so sat kep
+      operationId: getBoSoSatKep
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List BoSoSatKeps object
+            schema:
+              $ref: '#/definitions/BoSoSatKeps'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoChanLe/':
+    get:
+      description: Thong ke bo so chan le
+      operationId: getBoSoChanLe
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List BoSoChanLes object
+            schema:
+              $ref: '#/definitions/BoSoChanLes'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoLeChan/':
+    get:
+      description: Thong ke bo so le chan
+      operationId: getBoSoLeChan
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List BoSoLeChans object
+            schema:
+              $ref: '#/definitions/BoSoLeChans'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoChanChan/':
+    get:
+      description: Thong ke bo so chan chan
+      operationId: getBoSoChanChan
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List BoSoChanChans object
+            schema:
+              $ref: '#/definitions/BoSoChanChans'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoLeLe/':
+    get:
+      description: Thong ke bo so le le
+      operationId: getBoSoLeLe
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List BoSoLeLes object
+            schema:
+              $ref: '#/definitions/BoSoLeLes'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoTongChan/':
+    get:
+      description: Thong ke bo so tong chan
+      operationId: getBoSoTongChan
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List BoSoTongChans object
+            schema:
+              $ref: '#/definitions/BoSoTongChans'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/boSoTongLe/':
+    get:
+      description: Thong ke bo so tong le
+      operationId: getBoSoTongLe
+      tags:
+        - thongKe
+      parameters:
+          - name: province_id
+            in: query
+            description: Province Id
+            required: true
+            type: integer
+          - name: date_from
+            in: query
+            description: From date query
+            required: true
+            type: string
+          - name: date_to
+            in: query
+            description: To date query
+            required: true
+            type: string
+      responses:
+          '200':
+            description:  List BoSoTongLes object
+            schema:
+              $ref: '#/definitions/BoSoTongLes'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/lotoGanCucDai/':
+    get:
+      description: Thong ke bo so gan cuc dai
+      operationId: lotoGanCucDai.index
+      tags:
+        - thongKe
+      parameters:
+          - name: create_date
+            in: query
+            description: ngay thuc hien thong ke 'Y-m-d'
+            required: false
+            type: string
+      responses:
+          '200':
+            description:  List ThongkeLotoGanCucdais object
+            schema:
+              $ref: '#/definitions/ThongkeLotoGanCucdais'
+          default:
+              description: Unexpected error
+              schema:
+                 $ref: '#/definitions/Status'
+  '/thongKe/lotoDenky/':
+      get:
+        description: Thong ke bo so den ky theo ky gan nhat
+        operationId: lotoDenky.index
+        tags:
+          - thongKe
+        parameters:
+            - name: create_date
+              in: query
+              description: ngay thuc hien thong ke 'Y-m-d'
+              required: false
+              type: string
+        responses:
+            '200':
+              description:  List ThongkeLotoDenkys object
+              schema:
+                $ref: '#/definitions/ThongkeLotoDenkys'
+            default:
+                description: Unexpected error
+                schema:
+                   $ref: '#/definitions/Status'
+  '/thongKe/chuKyBoSo/':
+      get:
+        description: Thong ke chu kỳ bộ số
+        operationId: chuKyBoSo.index
+        tags:
+          - thongKe
+        parameters:
+            - name: bo_so
+              in: query
+              description: bo so thông kê
+              required: true
+              type: string
+            - name: is_special
+              in: query
+              description: là giải đặc biệt
+              required: true
+              type: integer
+            - name: province_id
+              in: query
+              description: Province id
+              required: true
+              type: integer
+        responses:
+            '200':
+              description:  List ThongkeChukyBosos object
+              schema:
+                $ref: '#/definitions/ThongkeChukyBosos'
+            default:
+                description: Unexpected error
+                schema:
+                   $ref: '#/definitions/Status'
+  '/thongKe/boSoVeLienTiep/':
+      get:
+        description: Thong ke bộ số về liên tiếp
+        operationId: boSoVeLienTiep.index
+        tags:
+          - thongKe
+        parameters:
+            - name: length
+              in: query
+              description: số ngày về liên tiếp
+              required: true
+              type: integer
+            - name: province_id
+              in: query
+              description: Province id
+              required: true
+              type: integer
+        responses:
+            '200':
+              description:  List ThongkeBosoVeLientieps object
+              schema:
+                $ref: '#/definitions/ThongkeBosoVeLientieps'
+            default:
+                description: Unexpected error
+                schema:
+                   $ref: '#/definitions/Status'
+  '/thongKe/giaiDacBiet/':
+      get:
+        description: Thong ke giải đặc biệt
+        operationId: giaiDacBiet.index
+        tags:
+          - thongKe
+        parameters:
+            - name: region
+              in: query
+              description: 1-mien bac, 2- mien trung 3- mien nam
+              required: true
+              type: integer
+        responses:
+            '200':
+              description:  List GiaiDacBietTheoNgays object
+              schema:
+                $ref: '#/definitions/GiaiDacBietTheoNgays'
+            default:
+                description: Unexpected error
+                schema:
+                   $ref: '#/definitions/Status'
+  '/chot':
+    get:
+      description: lấy danh sách 'Chot'
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value for data query. default value is 0
+          required: true
+          type: integer
+        - name: limit
+          in: query
+          description: default 10
+          required: true
+          type: integer
+      tags:
+        - chot
+      responses:
+        '200':
+          description: List chot
+          schema:
+            $ref: '#/definitions/Chot'
+        default:
+          description: Unexpected error
+          schema:
+             $ref: '#/definitions/Status'
+    post:
+      description: chot bo so
+      parameters:
+        - name: province_id
+          in: formData
+          description: id province
+          required: true
+          type: integer
+        - name: loto
+          in: formData
+          description: list bo so loto vd '40,30,60'
+          required: true
+          type: string
+        - name: loto_dac_biet
+          in: formData
+          description: list bo so loto dac biet vd '40,30,60'
+          required: true
+          type: string
+      tags:
+        - chot
+      responses:
+        '201':
+          description: upload file successfully
+          schema:
+            $ref: '#/definitions/Message'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/Status'
+  '/userPoint':
+      get:
+        description: list user & point
+        parameters:
+          - name: offset
+            in: query
+            description: Offset value for data query. default value is 0
+            required: true
+            type: integer
+          - name: limit
+            in: query
+            description: default 10
+            required: true
+            type: integer
+        tags:
+          - users
+        responses:
+          '200':
+            description: List user point
+            schema:
+              $ref: '#/definitions/UserPoint'
+          default:
+            description: Unexpected error
+            schema:
+               $ref: '#/definitions/Status'
+  '/file/upload':
+      post:
+        description: upload file to server
+        parameters:
+          - name: file
+            in: formData
+            description: file image type (jpg,jpeg,png,gif)
+            required: true
+            type: file
+        tags:
+          - files
+        responses:
+          '201':
+            description: upload file successfully
+            schema:
+              $ref: '#/definitions/Message'
+          '400':
+            description: Error
+            schema:
+              $ref: '#/definitions/Status'
+definitions:
+  List:
+    description: Basic structure for Set of Resources with pagination
+    type: object
+    required:
+      - hasNext
+      - offset
+      - limit
+    properties:
+      hasNext:
+        type: boolean
+      offset:
+        type: integer
+      limit:
+        type: integer
+  Status:
+    description: This structure is only for indicating "success/error". Common structure for Error based on RFC7807 ( https://tools.ietf.org/html/rfc7807 )
+    type: object
+    required:
+      - isSuccess
+      - type
+      - title
+      - status
+      - errorCode
+      - detail
+    properties:
+      isSuccess:
+        description: if it works fine
+        type: boolean
+      type:
+        description: Ref RFC7807 spec. A URI reference [RFC3986] that identifies the problem type
+        type: string
+      title:
+        description: Ref RFC7807 spec. A short, human-readable summary of the problem type.
+        type: string
+      status:
+        description: The HTTP status code generated by the origin server for this occurrence of the problem.
+        type: integer
+      errorCode:
+        description: 4 digits error code defined in the service. ( Refer error code list )
+        type: integer
+      detail:
+        description: A human-readable explanation specific to this occurrence of the problem. Don't use this text to analyze error content systematially. Because this text can be changed to describe better.
+        type: string
+      invalidParams:
+        description: If something wrong with params, this params returns an array of invalid params.
+        type: array
+        items:
+          type: string
+  Image:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Unique identifier representing a specific Advertiser
+      title:
+        type: string
+        description: Name of image upload.
+      url:
+        type: string
+        description: Url of image.
+      mediaType:
+        type: string
+        description: Type image/png.
+      fileSize:
+        type: integer
+        description: size of image.
+      width:
+        type: integer
+        description: image width.
+      height:
+        type: integer
+        description: image height.
+  Categories:
+    description: Category List
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        description: category list
+        type: array
+        items:
+          $ref: '#/definitions/Category'
+  Category:
+    description: Category Detail
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        description: category id
+        type: integer
+      name:
+        description: category name
+        type: string
+  AccessToken:
+    description: OAuth2 Responce
+    type: object
+    properties:
+      accessToken:
+        type: string
+        description: access token
+      tokenType:
+        type: string
+        description: "beader"
+      rememberToken:
+        type: string
+        description: remember token
+      expiresIn:
+        type: integer
+        description: when accesstoken expire
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique identifier representing a specific campaign
+      name:
+        type: string
+        description: name of user.
+      profileImage:
+        type: object
+        $ref: '#/definitions/Image'
+  Users:
+    allOf:
+      - $ref: '#/definitions/List'
+      - required:
+          - items
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+  Me:
+    allOf:
+      - $ref: '#/definitions/User'
+      - required:
+          - email
+        properties:
+          email:
+            description: Email Address of the user
+            type: string
+          phoneNumber:
+            description: Phone Number
+            type: string
+  Message:
+    description: Ticket Information
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Message ID
+      user:
+        type: object
+        $ref: '#/definitions/User'
+      type:
+        type: string
+        description: message type, ( text, image, poll )
+      content:
+        type: string
+        description: text representation of message
+      image:
+        type: object
+        $ref: '#/definitions/Image'
+      poll:
+        type: object
+        $ref: '#/definitions/Image'
+  DoSo:
+    description: Ket qua do so theo ngay
+    type: object
+    properties:
+      bo_so:
+        type: string
+        description: bo so do
+      so_lan:
+        type: integer
+        description: so lan xuat hien bo so
+      ngay_quay:
+        type: string
+        description: ngay quay giai 'Y-m-d'.
+      ket_qua:
+        type: object
+        description: KetQuaMienBac
+  KetQuaMienBac:
+    description: Ket qua mien Bac
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Ket Qua Mien Bac ID
+      province_id:
+        type: integer
+        description: Province ID
+      ngay_quay:
+        type: string
+        description: Ngay mo thuong 'Y-m-d'.
+      giai_dacbiet:
+        type: string
+        description: ket qua giai dac biet.
+      giai_nhat:
+        type: string
+        description: giai nhat
+      giai_nhi_1:
+        type: string
+        description: giai nhi 1
+      giai_nhi_2:
+        type: string
+        description: giai nhi  2
+      giai_ba_1:
+        type: string
+        description: giai ba 1
+      giai_ba_2:
+        type: string
+        description: giai ba 2
+      giai_ba_3:
+        type: string
+        description: giai ba 3
+      giai_ba_4:
+        type: string
+        description: giai ba 4
+      giai_ba_5:
+        type: string
+        description: giai ba 5
+      giai_ba_6:
+        type: string
+        description: giai ba 6
+      giai_tu_1:
+        type: string
+        description: giai tu 1
+      giai_tu_2:
+        type: string
+        description: giai tu 2
+      giai_tu_3:
+        type: string
+        description: giai tu 3
+      giai_tu_4:
+        type: string
+        description: giai tu 4
+      giai_nam_1:
+        type: string
+        description: giai nam 1
+      giai_nam_2:
+        type: string
+        description: giai nam 2
+      giai_nam_3:
+        type: string
+        description: giai nam 3
+      giai_nam_4:
+        type: string
+        description: giai nam 4
+      giai_nam_5:
+        type: string
+        description: giai nam 5
+      giai_nam_6:
+        type: string
+        description: giai nam 6
+      giai_sau_1:
+        type: string
+        description: giai sau 1
+      giai_sau_2:
+        type: string
+        description: giai sau 2
+      giai_sau_3:
+        type: string
+        description: giai sau 3
+      giai_bay_1:
+        type: string
+        description: giai bay 1
+      giai_bay_2:
+        type: string
+        description: giai bay 2
+      giai_bay_3:
+        type: string
+        description: giai bay 3
+      giai_bay_4:
+        type: string
+        description: giai bay 4
+  KetQuaMienNam:
+    description: Ket qua mien Nam
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Ket Qua Mien Nam ID
+      province_id:
+        type: integer
+        description: Province ID
+      ngay_quay:
+        type: string
+        description: Ngay mo thuong 'Y-m-d'.
+      giai_dacbiet:
+        type: string
+        description: ket qua giai dac biet.
+      giai_nhat:
+        type: string
+        description: giai nhat
+      giai_nhi:
+        type: string
+        description: giai nhi
+      giai_ba_1:
+        type: string
+        description: giai ba 1
+      giai_ba_2:
+        type: string
+        description: giai ba 2
+      giai_tu_1:
+        type: string
+        description: giai tu 1
+      giai_tu_2:
+        type: string
+        description: giai tu 2
+      giai_tu_3:
+        type: string
+        description: giai tu 3
+      giai_tu_4:
+        type: string
+        description: giai tu 4
+      giai_tu_5:
+        type: string
+        description: giai tu 5
+      giai_tu_6:
+        type: string
+        description: giai tu 6
+      giai_tu_7:
+        type: string
+        description: giai tu 7
+      giai_nam:
+        type: string
+        description: giai nam
+      giai_sau_1:
+        type: string
+        description: giai sau 1
+      giai_sau_2:
+        type: string
+        description: giai sau 2
+      giai_sau_3:
+        type: string
+        description: giai sau 3
+      giai_bay:
+        type: string
+        description: giai bay
+      giai_tam:
+        type: string
+        description: giai tam
+  KetQuaMienTrung:
+    description: Ket qua mien Nam
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Ket Qua Mien Nam ID
+      province_id:
+        type: integer
+        description: Province ID
+      ngay_quay:
+        type: string
+        description: Ngay mo thuong 'Y-m-d'.
+      giai_dacbiet:
+        type: string
+        description: ket qua giai dac biet.
+      giai_nhat:
+        type: string
+        description: giai nhat
+      giai_nhi:
+        type: string
+        description: giai nhi
+      giai_ba_1:
+        type: string
+        description: giai ba 1
+      giai_ba_2:
+        type: string
+        description: giai ba 2
+      giai_tu_1:
+        type: string
+        description: giai tu 1
+      giai_tu_2:
+        type: string
+        description: giai tu 2
+      giai_tu_3:
+        type: string
+        description: giai tu 3
+      giai_tu_4:
+        type: string
+        description: giai tu 4
+      giai_tu_5:
+        type: string
+        description: giai tu 5
+      giai_tu_6:
+        type: string
+        description: giai tu 6
+      giai_tu_7:
+        type: string
+        description: giai tu 7
+      giai_nam:
+        type: string
+        description: giai nam
+      giai_sau_1:
+        type: string
+        description: giai sau 1
+      giai_sau_2:
+        type: string
+        description: giai sau 2
+      giai_sau_3:
+        type: string
+        description: giai sau 3
+      giai_bay:
+        type: string
+        description: giai bay
+      giai_tam:
+        type: string
+        description: giai tam
+  KetquaMega645:
+    description: Ket qua mien Mega 645
+    type: object
+    properties:
+      id:
+        type: integer
+        description: KetQuaMega645 ID
+      ky_ve:
+        type: string
+        description: Ma ky mo thuong
+      ngay_mo:
+        type: string
+        description: Ngay mo thuong 'Y-m-d'.
+      bo_1:
+        type: string
+        description: bo so 1.
+      bo_2:
+        type: string
+        description: bo so 2
+      bo_3:
+        type: string
+        description: bo so 3
+      bo_4:
+        type: string
+        description: bo so 4
+      bo_5:
+        type: string
+        description: bo so 5
+      bo_6:
+        type: string
+        description: bo so 6
+      jackpot_so_giai:
+        type: integer
+        description: so nguoi trung jackpot
+      jackpot_gia_tri:
+        type: number
+        description: gia tri giai
+      nhat_so_giai:
+        type: integer
+        description: so nguoi trung giai nhat
+      nhat_gia_tri:
+        type: number
+        description: gia tri giai
+      nhi_so_giai:
+        type: integer
+        description: so nguoi trung giai nhi
+      nhi_giai_tri:
+        type: number
+        description: gia tri giai
+      ba_so_giai:
+        type: integer
+        description: so nguoi trung giai 3
+      ba_gia_tri:
+        type: number
+        description: gia tri giai
+  KetQuaMax4d:
+    description: Ket qua mien Mega 645
+    type: object
+    properties:
+      id:
+        type: integer
+        description: KetquaMax4d ID
+      ky_ve:
+        type: string
+        description: Ma ky mo thuong
+      ngay_mo:
+        type: string
+        description: Ngay mo thuong 'Y-m-d'.
+      nhat:
+        type: string
+        description: giai nhat
+      nhi_1:
+        type: string
+        description: giai nhi
+      nhi_2:
+        type: string
+        description: giai nhi
+      ba_1:
+        type: string
+        description: giai ba
+      ba_2:
+        type: string
+        description: giai ba
+      ba_3:
+        type: string
+        description: giai ba
+      kk_1:
+        type: integer
+        description: giai khuyen khich
+      kk_2:
+        type: number
+        description: giai khuyen khich
+      nhat_so_giai:
+        type: integer
+        description: so nguoi trung giai nhat
+      nhi_so_giai:
+        type: number
+        description: so giai nhi
+      kk_1_so_giai:
+        type: integer
+        description: KK1 so giai
+      kk_2_so_giai:
+        type: number
+        description: KK2 so giai
+      nhat_giai_tri:
+        type: integer
+        description: giai tri giaii nhat
+      nhi_giai_tri:
+        type: number
+        description: gia tri giai
+      ba_giai_tri:
+        type: number
+        description: gia tri giai
+      kk_1_giai_tri:
+        type: number
+        description: gia tri giai
+      kk_2_giai_tri:
+        type: number
+        description: gia tri giai
+  KetQuaThanTai:
+    description: Ket qua than tai
+    type: object
+    properties:
+      id:
+        type: integer
+        description: KetQuaThanTai ID
+      ngay_quay:
+        type: string
+        description: Ngay quay thuong 'Y-m-d'
+      ketqua:
+        type: string
+        description: bo so trung thuong
+  KetQuaDienToan123:
+    description: Ket qua dien toan 123
+    type: object
+    properties:
+      id:
+        type: integer
+        description: KetQuaDienToan123 ID
+      ngay_quay:
+        type: string
+        description: Ngay quay thuong 'Y-m-d'
+      ketqua_1:
+        type: string
+        description: bo so trung thuong
+      ketqua_2:
+        type: string
+        description: bo so trung thuong
+      ketqua_3:
+        type: string
+        description: bo so trung thuong
+  KetQuaDienToan6x36:
+    description: Ket qua dien toan 6x36
+    type: object
+    properties:
+      id:
+        type: integer
+        description: KetQuaDienToan123 ID
+      ngay_quay:
+        type: string
+        description: Ngay quay thuong 'Y-m-d'
+      ketqua_1:
+        type: string
+        description: bo so trung thuong
+      ketqua_2:
+        type: string
+        description: bo so trung thuong
+      ketqua_3:
+        type: string
+        description: bo so trung thuong
+      ketqua_4:
+        type: string
+        description: bo so trung thuong
+      ketqua_5:
+        type: string
+        description: bo so trung thuong
+      ketqua_6:
+        type: string
+        description: bo so trung thuong
+  BoSoXuatHien:
+    description: Thong ke bo so xuat hien
+    type: object
+    properties:
+      province_id:
+        type: integer
+        description: Province id
+      bo_so:
+        type: string
+        description: Bo so xuat hien
+      so_lan:
+        type: integer
+        description: So lan bo so xuat hien
+      ty_le:
+        type: number
+        description: Ty le so lan xuat hien
+  DauSoXuatHien:
+    description: Thong ke Dau so xuat hien
+    type: object
+    properties:
+      province_id:
+        type: integer
+        description: Province id
+      dau_so:
+        type: string
+        description: Dau so xuat hien
+      so_lan:
+        type: integer
+        description: So lan dau so xuat hien
+      ty_le:
+        type: number
+        description: Ty le so lan xuat hien
+  DitSoXuatHien:
+    description: Thong ke dit so xuat hien
+    type: object
+    properties:
+      province_id:
+        type: integer
+        description: Province id
+      dit_so:
+        type: string
+        description: Dit so xuat hien
+      so_lan:
+        type: integer
+        description: So lan dit so xuat hien
+      ty_le:
+        type: number
+        description: Ty le so lan xuat hien
+  BoSoGan:
+    description: Bo so gan
+    type: object
+    properties:
+      bo_so:
+        type: string
+        description: bo so
+      ngay_quay:
+        type: string
+        description: ngay xuat hien gan nhat
+      ngay_gan:
+        type: integer
+        description: So ngay qan
+  DauSoDangBang:
+    description: Dau so dang bang
+    type: object
+    properties:
+      dau_so:
+        type: string
+        description: dau so
+      ngay_quay:
+        type: string
+        description: ngay xuat hien gan nhat
+      so_lan:
+        type: integer
+        description: So lan xuat hien
+  DitSoDangBang:
+    description: Dit so dang bang
+    type: object
+    properties:
+      dit_so:
+        type: string
+        description: dit so
+      ngay_quay:
+        type: string
+        description: ngay xuat hien gan nhat
+      so_lan:
+        type: integer
+        description: So lan xuat hien
+  BoSoKep:
+    description: bo so thong ke
+    type: object
+    properties:
+      bo_so:
+        type: string
+        description: bo so
+      ngay_quay:
+        type: string
+        description: ngay xuat hien gan nhat
+      so_lan:
+        type: integer
+        description: So lan xuat hien
+  ThongkeLotoGanCucdai:
+    description: bo so gan cuc dai
+    type: object
+    properties:
+      bo_so:
+        type: string
+        description: bo so
+      ngay_quay:
+        type: string
+        description: ngay xuat hien gan nhat
+      start_date:
+        type: string
+        description: ngay bắt đầu
+      end_date:
+        type: string
+        description: ngay ngày kết thúc
+      id:
+        type: integer
+        description: id thong ke
+      lan_quay_cuc_dai:
+        type: integer
+        description: Lần quay cực đại
+      lan_quay_chua_ve:
+        type: integer
+        description: Lần quay chưa về
+  ThongkeLotoDenky:
+    description: bo so gan cuc dai
+    type: object
+    properties:
+      bo_so:
+        type: string
+        description: bo so
+      do_dai_chu_ky:
+        type: integer
+        description: Độ dài chu kỳ
+      start_date:
+        type: string
+        description: ngay bắt đầu
+      end_date:
+        type: string
+        description: ngay ngày kết thúc
+      id:
+        type: integer
+        description: id thong ke
+  ThongkeChukyBoso:
+    description: bo so gan cuc dai
+    type: object
+    properties:
+      bo_so:
+        type: string
+        description: bo so
+      province_id:
+        type: integer
+        description: Mã tỉnh
+      start_date:
+        type: string
+        description: ngay bắt đầu
+      end_date:
+        type: string
+        description: ngay ngày kết thúc
+      length:
+        type: integer
+        description: độ dài chu kỳ
+      is_special:
+        type: integer
+        description: 0- loto 1- giai dac biet
+  ThongkeBosoVeLientiep:
+    description: Bộ số về liên tiếp
+    type: object
+    properties:
+      bo_so:
+        type: string
+        description: bo so
+      province_id:
+        type: integer
+        description: Mã tỉnh
+      start_date:
+        type: string
+        description: ngay bắt đầu
+      end_date:
+        type: string
+        description: ngay ngày kết thúc
+      length:
+        type: integer
+        description: độ dài chu kỳ
+  GiaiDacBietTheoNgay:
+    description: Bộ số về liên tiếp
+    type: object
+    properties:
+      giai_dacbiet:
+        type: string
+        description: giai dac biet
+      province_id:
+        type: integer
+        description: Mã tỉnh
+      province:
+        type: string
+        description: Ten tỉnh mở thưởng
+      ngay_quay:
+        type: string
+        description: Ngày quay thưởng
+      thu:
+        type: string
+        description: Thứ trong tuần
+      nam:
+        type: string
+        description: Năm mở thưởng
+  Province:
+      description: Tỉnh thành
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id province
+        code:
+          type: string
+          description: Mã tỉnh thành
+        name:
+          type: string
+          description: Tên tỉnh mở thưởng
+        region:
+          type: integer
+          description: Vùng miền mb 1, mt 2, mn 3
+        thu2:
+          type: integer
+          description: giải mở vào thứ 2
+        thu3:
+          type: integer
+          description: giải mở vào thứ 3
+        thu4:
+          type: integer
+          description: giải mở vào thứ 4
+        thu5:
+          type: integer
+          description: giải mở vào thứ 5
+        thu6:
+          type: integer
+          description: giải mở vào thứ 6
+        thu7:
+          type: integer
+          description: giải mở vào thứ 7
+        thu8:
+          type: integer
+          description: giải mở vào chủ nhật
+  Chot:
+    description: Bo so khach hang 'Chot'
+    type: object
+    properties:
+      id:
+        type: integer
+        description: id
+      user_id:
+        type: integer
+        description: id user
+      province_id:
+        type: integer
+        description: id province
+      ngay_quay:
+        type: string
+        description: ngay quay 'Y-m-d'
+      loto:
+        type: string
+        description: danh sach bo so chot dang jon
+      loto_dac_biet:
+        type: string
+        description: danh sach bo so chot dang jon
+  UserPoint:
+    description: user va point
+    type: object
+    properties:
+      user_id:
+        type: integer
+        description: id user
+      username:
+        type: string
+        description: user name
+      avatar:
+        type: string
+        description: avatar user
+      point:
+        type: integer
+        description: so diem cua user
+  KetquaMienbacs:
+    description: KetQuaMienBac Information List
+    type: array
+    items:
+      $ref: '#/definitions/KetQuaMienBac'
+  KetQuaMienNams:
+    description: KetQuaMienNam Information List
+    type: array
+    items:
+      $ref: '#/definitions/KetQuaMienNam'
+  KetQuaMienTrungs:
+    description: KetQuaMienTrung Information List
+    type: array
+    items:
+      $ref: '#/definitions/KetQuaMienTrung'
+  KetquaMega645s:
+    description: KetquaMega645 Information List
+    type: array
+    items:
+      $ref: '#/definitions/KetquaMega645'
+  KetQuaMax4ds:
+    description: KetQuaMax4d Information List
+    type: array
+    items:
+      $ref: '#/definitions/KetQuaMax4d'
+  KetQuaThanTais:
+    description: KetQuaThanTai Information List
+    type: array
+    items:
+      $ref: '#/definitions/KetQuaThanTai'
+  KetQuaDienToan123s:
+    description: KetQuaDienToan123 Information List
+    type: array
+    items:
+      $ref: '#/definitions/KetQuaDienToan123'
+  KetQuaDienToan6x36s:
+    description: KetQuaDienToan6x36 Information List
+    type: array
+    items:
+      $ref: '#/definitions/KetQuaDienToan6x36'
+  BoSoXuatHiens:
+    description: BoSoXuatHien Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoXuatHien'
+  DauSoXuatHiens:
+    description: DauSoXuatHien Information List
+    type: array
+    items:
+      $ref: '#/definitions/DauSoXuatHien'
+  DitSoXuatHiens:
+    description: DitSoXuatHien Information List
+    type: array
+    items:
+      $ref: '#/definitions/DitSoXuatHien'
+  BoSoGans:
+    description: BoSoGans Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoGan'
+  DauSoDangBangs:
+    description: DauSoDangBangs Information List
+    type: array
+    items:
+      $ref: '#/definitions/DauSoDangBang'
+  DitSoDangBangs:
+    description: DitSoDangBangs Information List
+    type: array
+    items:
+      $ref: '#/definitions/DitSoDangBang'
+  BoSoKeps:
+    description: BoSoKeps Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoKep'
+  BoSoSatKeps:
+    description: BoSoSatKeps Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoKep'
+  BoSoChanLes:
+    description: BoSoChanLes Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoKep'
+  BoSoLeChans:
+    description: BoSoLeChans Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoKep'
+  BoSoChanChans:
+    description: BoSoChanChans Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoKep'
+  BoSoLeLes:
+    description: BoSoLeLes Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoKep'
+  BoSoTongChans:
+    description: BoSoTongChans Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoKep'
+  BoSoTongLes:
+    description: BoSoTongLes Information List
+    type: array
+    items:
+      $ref: '#/definitions/BoSoKep'
+  ThongkeLotoGanCucdais:
+    description: ThongkeLotoGanCucdais Information List
+    type: array
+    items:
+      $ref: '#/definitions/ThongkeLotoGanCucdai'
+  ThongkeLotoDenkys:
+    description: ThongkeLotoDenkys Information List
+    type: array
+    items:
+      $ref: '#/definitions/ThongkeLotoDenky'
+  ThongkeChukyBosos:
+    description: ThongkeChukyBosos Information List
+    type: array
+    items:
+      $ref: '#/definitions/ThongkeChukyBoso'
+  ThongkeBosoVeLientieps:
+    description: ThongkeBosoVeLientieps Information List
+    type: array
+    items:
+      $ref: '#/definitions/ThongkeBosoVeLientiep'
+  GiaiDacBietTheoNgays:
+    description: GiaiDacBietTheoNgays Information List
+    type: array
+    items:
+      $ref: '#/definitions/GiaiDacBietTheoNgay'
+  Provinces:
+    description: Province Information List
+    type: array
+    items:
+      $ref: '#/definitions/Province'
+  Chots:
+    description: Chot list
+    type: array
+    items:
+      $ref: '#/definitions/Chot'
+  UserPoints:
+    description: user point list
+    type: array
+    items:
+      $ref: '#/definitions/UserPoint'
