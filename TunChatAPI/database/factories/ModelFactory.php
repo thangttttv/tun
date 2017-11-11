@@ -854,4 +854,36 @@ $factory->define(\App\Models\TagCustomer::class, function (Faker\Generator $fake
     ];
 });
 
+$factory->define(\App\Models\Sequence::class, function (Faker\Generator $faker) {
+    return [
+        'page_id' => 0,
+        'title' => '',
+        'sent_date' => '',
+        'sent_time_from' => '',
+        'sent_time_to' => '',
+        'embedded' => 0,
+        'message' => 0,
+        'opened' => 0,
+        'clicked' => 0,
+    ];
+});
+
+$factory->define(\App\Models\SequenceMessage::class, function (Faker\Generator $faker) {
+    return [
+        'sequence_id' => 0,
+        'message_id' => 0,
+        'sent_after_day' => 0,
+        'send' => 0,
+        'opened' => 0,
+        'clicked' => 0,
+    ];
+});
+
+$factory->define(\App\Models\SequenceCustomer::class, function (Faker\Generator $faker) {
+    return [
+        'sequence_id' => 0,
+        'customer_id' => 0,
+    ];
+});
+
 /* NEW MODEL FACTORY */

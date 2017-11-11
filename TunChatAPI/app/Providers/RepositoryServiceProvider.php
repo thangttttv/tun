@@ -102,6 +102,21 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Eloquent\TagCustomerRepository::class
         );
 
+        $this->app->singleton(
+            \App\Repositories\SequenceCustomerRepositoryInterface::class,
+            \App\Repositories\Eloquent\SequenceCustomerRepository::class
+        );
+
+        $this->app->singleton(
+            \App\Repositories\SequenceRepositoryInterface::class,
+            \App\Repositories\Eloquent\SequenceRepository::class
+        );
+
+        $this->app->singleton(
+            \App\Repositories\SequenceMessageRepositoryInterface::class,
+            \App\Repositories\Eloquent\SequenceMessageRepository::class
+        );
+
         /* NEW BINDING */
     }
 }
