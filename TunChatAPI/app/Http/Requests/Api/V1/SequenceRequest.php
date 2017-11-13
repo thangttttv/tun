@@ -27,7 +27,6 @@ class SequenceRequest extends Request
     public function rules()
     {
         return [
-            'page_id'       => 'required|numeric',
             'title'         => 'required|max:150',
             'sent_date'     => 'in:All,monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'sent_time_from'=> 'max:5',

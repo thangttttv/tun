@@ -121,6 +121,13 @@ Route::group(['prefix' => 'api', 'as' => 'api.', 'namespace' => 'Api'], function
 	        Route::post('/customer/{customer_id}/tag/{tag_id}', 'TagController@tag');
 	        Route::delete('/customer/{customer_id}/tag/{tag_id}', 'TagController@removeTag');
 
+	        #sequence
+	        Route::get('/page/{page_id}/sequence', 'SequenceController@index');
+	        Route::get('/page/{page_id}/sequence/{sequence_id}', 'SequenceController@index');
+	        Route::post('/page/{page_id}/sequence', 'SequenceController@store');
+	        Route::post('/page/{page_id}/sequence/{sequence_id}', 'SequenceController@update');
+	        Route::delete('/page/{page_id}/sequence/{sequence_id}', 'SequenceController@destroy');
+
             Route::post('signout', 'AuthController@postSignOut');
 			// ME
 	        Route::group(['prefix' => 'me'], function () {

@@ -42,6 +42,9 @@ class SequenceController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param int               $page_id
+     * @param PaginationRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index($page_id, PaginationRequest $request)
@@ -51,7 +54,7 @@ class SequenceController extends Controller
         $status             = $request->get('status');
         $filters            = [];
         $filters['page_id'] = $page_id;
-        if (empty($status)) {
+        if (!empty($status)) {
             $filters['status'] = $status;
         }
 
@@ -67,9 +70,25 @@ class SequenceController extends Controller
     }
 
     /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id)
+    {
+        $sequence = $this->sequenceRepository->find($id);
+        if (empty($sequence)) {
+            throw new APIErrorException('notFound', 'Sequence Not Found', []);
+        }
+
+        return Sequence::updateWithModel($sequence)->response();
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param SequenceRequest $request
+     * @param int             $page_id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -91,9 +110,9 @@ class SequenceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     * @param int                      $page_id
+     * @param SequenceRequest $request
+     * @param int             $id
+     * @param int             $page_id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -110,6 +129,9 @@ class SequenceController extends Controller
         // update sequence
         $sequence = $this->sequenceRepository->find($id);
         if (!empty($sequence)) {
+            if ((count($sequence_message_ids) + count($send_after_days) + count($messageIds)) / 3 != count($sequence_message_ids)) {
+                throw new APIErrorException('wrongParameter', 'Parameter wrong', []);
+            }
             $sequence = $this->sequenceRepository->update($sequence, $input);
             $i        = 0;
             // add message
@@ -136,22 +158,23 @@ class SequenceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
+     * @param int $page_id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy($page_id, $id)
     {
         $deleted      = false;
         $sequence     = $this->sequenceRepository->find($id);
         if (!empty($sequence)) {
             $deleted = $this->sequenceRepository->delete($sequence);
             if ($deleted) {
-                $messages = $this->sequenceMessageRepository->allByFilter(['sequence_id']);
+                $messages = $this->sequenceMessageRepository->allByFilter(['sequence_id'=>$id]);
                 foreach ($messages as $message) {
                     $this->sequenceMessageRepository->delete($message);
                 }
 
-                $customers = $this->sequenceCustomerRepository->allByFilter(['sequence_id']);
+                $customers = $this->sequenceCustomerRepository->allByFilter(['sequence_id'=>$id]);
                 foreach ($customers as $customer) {
                     $this->sequenceCustomerRepository->delete($customer);
                 }

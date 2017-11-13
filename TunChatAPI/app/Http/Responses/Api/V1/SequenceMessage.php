@@ -28,6 +28,7 @@ class SequenceMessage extends Response
      */
     public static function updateWithModel($model)
     {
+    	$message = Message::updateWithModel($model->message);
         $response=new static([], 400);
         if (!empty($model)) {
             $modelArray=[
@@ -38,7 +39,7 @@ class SequenceMessage extends Response
                 'send'          => $model->send,
                 'opened'        => $model->opened,
                 'clicked'       => $model->clicked,
-                'message'       => Message::updateWithModel($model->message),
+                'message'       => $message->data,
 
             ];
 
