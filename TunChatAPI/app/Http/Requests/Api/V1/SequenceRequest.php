@@ -29,9 +29,9 @@ class SequenceRequest extends Request
         return [
             'page_id'       => 'required|numeric',
             'title'         => 'required|max:150',
-            'sent_date'     => 'required|in:All,monday,tuesday,wednesday,thursday,friday,saturday,sunday',
-            'sent_time_from'=> 'required|max:5',
-            'sent_time_to'  => 'required|max:5',
+            'sent_date'     => 'in:All,monday,tuesday,wednesday,thursday,friday,saturday,sunday',
+            'sent_time_from'=> 'max:5',
+            'sent_time_to'  => 'max:5',
 
         ];
     }

@@ -19,6 +19,7 @@ class CreateSequenceCustomersTable extends Migration
             $table->unsignedInteger('customer_id')->default(0)->index();
 
             $table->timestamps();
+	        $table->unique(["sequence_id","customer_id"],"sequence_customer");
         });
 
         $this->updateTimestampDefaultValue('sequence_customers', ['updated_at'], ['created_at']);

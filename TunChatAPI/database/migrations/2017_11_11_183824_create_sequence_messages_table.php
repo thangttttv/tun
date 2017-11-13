@@ -22,6 +22,7 @@ class CreateSequenceMessagesTable extends Migration
             $table->integer('opened')->default(0);
             $table->integer('clicked')->default(0);
             $table->timestamps();
+	        $table->unique(["sequence_id","message_id"],"sequence_message");
         });
 
         $this->updateTimestampDefaultValue('sequence_messages', ['updated_at'], ['created_at']);

@@ -117,6 +117,11 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Eloquent\SequenceMessageRepository::class
         );
 
+        $this->app->singleton(
+            \App\Repositories\MessageRepositoryInterface::class,
+            \App\Repositories\Eloquent\MessageRepository::class
+        );
+
         /* NEW BINDING */
     }
 }

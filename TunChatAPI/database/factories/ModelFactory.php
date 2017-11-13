@@ -886,4 +886,16 @@ $factory->define(\App\Models\SequenceCustomer::class, function (Faker\Generator 
     ];
 });
 
+$factory->define(\App\Models\Message::class, function (Faker\Generator $faker) {
+    return [
+        'page_id' => 0,
+        'title' => '',
+        'content' => '',
+        'sent' => 0,
+        'delivered' => 0,
+        'opened' => 0,
+        'clicked' => 0,
+    ];
+});
+
 /* NEW MODEL FACTORY */
