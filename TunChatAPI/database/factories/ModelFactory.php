@@ -898,4 +898,31 @@ $factory->define(\App\Models\Message::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(\App\Models\Action::class, function (Faker\Generator $faker) {
+    return [
+        'code' => '',
+        'description' => '',
+        'status' => $faker->boolean,
+    ];
+});
+
+$factory->define(\App\Models\Keyword::class, function (Faker\Generator $faker) {
+    return [
+        'page_id' => 0,
+        'keyword_only' => '',
+        'keyword_in' => '',
+        'keyword_A_And_B' => '',
+        'keyword_A_Not_B' => '',
+        'message_reply_id' => 0,
+    ];
+});
+
+$factory->define(\App\Models\KeywordAction::class, function (Faker\Generator $faker) {
+    return [
+        'keyword_id' => 0,
+        'action_id' => 0,
+        'parameters' => '',
+    ];
+});
+
 /* NEW MODEL FACTORY */

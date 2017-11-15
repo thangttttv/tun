@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call('AdminUserSeeder');
+        $this->call('ActionSeeder');
         if (app()->environment() === 'testing') {
             // Add More Seed For Testing
         }

@@ -122,6 +122,21 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Eloquent\MessageRepository::class
         );
 
+        $this->app->singleton(
+            \App\Repositories\ActionRepositoryInterface::class,
+            \App\Repositories\Eloquent\ActionRepository::class
+        );
+
+        $this->app->singleton(
+            \App\Repositories\KeywordRepositoryInterface::class,
+            \App\Repositories\Eloquent\KeywordRepository::class
+        );
+
+        $this->app->singleton(
+            \App\Repositories\KeywordActionRepositoryInterface::class,
+            \App\Repositories\Eloquent\KeywordActionRepository::class
+        );
+
         /* NEW BINDING */
     }
 }

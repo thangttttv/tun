@@ -127,6 +127,10 @@ Route::group(['prefix' => 'api', 'as' => 'api.', 'namespace' => 'Api'], function
 	        Route::post('/page/{page_id}/sequence', 'SequenceController@store');
 	        Route::post('/page/{page_id}/sequence/{sequence_id}', 'SequenceController@update');
 	        Route::delete('/page/{page_id}/sequence/{sequence_id}', 'SequenceController@destroy');
+			#action
+	        Route::get('/action', 'ActionController@index');
+	        #keyword
+	        Route::get('/page/{page_id}/keyword', 'KeywordController@index');
 
             Route::post('signout', 'AuthController@postSignOut');
 			// ME
