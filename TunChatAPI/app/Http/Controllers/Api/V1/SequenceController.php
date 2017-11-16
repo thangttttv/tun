@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Exceptions\APIErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\PaginationRequest;
+use App\Http\Requests\Api\V1\Request;
 use App\Http\Requests\Api\V1\SequenceRequest;
 use App\Http\Responses\Api\V1\Sequence;
 use App\Http\Responses\Api\V1\Sequences;
@@ -153,6 +154,59 @@ class SequenceController extends Controller
             return Sequence::updateWithModel($sequence)->response();
         }
     }
+
+	/**
+	 * Add sequence with user.
+	 *
+	 * @param $Request $request
+	 * @param int             $page_id
+	 * @param int             $sequence_id
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function seq($page_id,$sequence_id, Request $request)
+	{
+		$customer_ids = $request->get("customer_ids",[]);
+		if (empty($customer_ids)) {
+			throw new APIErrorException('unknown', 'Customer not choice', []);
+		}
+
+		foreach ($customer_ids as $customer_id){
+			$customerSEQ = $this->sequenceCustomerRepository->findBySequenceIdAndCustomerId($sequence_id,$customer_id);
+			if(empty($customerSEQ)){
+				$this->sequenceCustomerRepository->create(["sequence_id"=>$sequence_id,"customer_id"=>$customer_id]);
+			}
+		}
+
+		return Status::ok("Customer add sequence success")->response();
+	}
+
+
+	/**
+	 * Add sequence with user.
+	 *
+	 * @param $Request $request
+	 * @param int             $page_id
+	 * @param int             $sequence_id
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function removeSequence($page_id,$sequence_id, Request $request)
+	{
+		$customer_ids = $request->get("customer_ids",[]);
+		if (empty($customer_ids)) {
+			throw new APIErrorException('unknown', 'Customer not choice', []);
+		}
+
+		foreach ($customer_ids as $customer_id){
+			$customerSEQ = $this->sequenceCustomerRepository->findBySequenceIdAndCustomerId($sequence_id,$customer_id);
+			if(empty($customerSEQ)){
+				$this->sequenceCustomerRepository->delete($customerSEQ);
+			}
+		}
+
+		return Status::ok("Customer remove sequence success")->response();
+	}
 
     /**
      * Remove the specified resource from storage.

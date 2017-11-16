@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Exceptions\APIErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\CustomerRequest;
-use App\Http\Requests\Api\V1\PaginationCustomerRequest;
+use App\Http\Requests\Api\V1\PaginationRequest;
 use App\Http\Responses\Api\V1\Customer;
 use App\Http\Responses\Api\V1\Customers;
 use App\Http\Responses\Api\V1\Status;
@@ -68,11 +68,10 @@ class CustomerController extends Controller
         }
     }
 
-    public function index(PaginationCustomerRequest $request)
+    public function index($page_id, PaginationRequest $request)
     {
         $offset             = $request->offset();
         $limit              = $request->limit();
-        $page_id            = $request->get('page_id');
         $filters            = [];
         $filters['page_id'] = $page_id;
 
@@ -89,10 +88,11 @@ class CustomerController extends Controller
 
     /**
      * @param $id
+     * @param $page_id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show($page_id, $id)
     {
         $customer = $this->customerRepository->find($id);
         if (empty($customer)) {
@@ -102,11 +102,12 @@ class CustomerController extends Controller
         return Customer::updateWithModel($customer)->response();
     }
 
-    public function store(CustomerRequest $request)
+    public function store($page_id, CustomerRequest $request)
     {
         /** @var \App\Models\User $user */
-        $user  = $this->userService->getUser();
-        $input = $request->only(['page_id', 'facebook_id', 'name', 'email', 'mobile', 'gender', 'opted_in_through', 'time_subscribed', 'avatar_url', 'subscribed', 'can_reply', 'country', 'address']);
+        $user               = $this->userService->getUser();
+        $input              = $request->only(['facebook_id', 'name', 'email', 'mobile', 'gender', 'opted_in_through', 'time_subscribed', 'avatar_url', 'subscribed', 'can_reply', 'country', 'address']);
+        $filters['page_id'] = $page_id;
 
         if (!empty($request->get('time_subscribed'))) {
             $input['time_subscribed'] = date('Y-m-d H:i:s', $request->get('time_subscribed'));

@@ -20,7 +20,7 @@ class Keyword extends Response
         'keyword_a_and_b_status'                    => 0,
         'keyword_a_not_b'                           => '',
         'keyword_a_not_b_status'                    => 0,
-        'message_id'                                => '',
+        'message_id'                                => 0,
     ];
 
     /**

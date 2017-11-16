@@ -29,7 +29,9 @@ class CustomerCustomFieldController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param $page_id
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index($page_id)
     {
@@ -50,15 +52,17 @@ class CustomerCustomFieldController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param $page_id
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store($page_id, Request $request)
     {
         /** @var \App\Models\User $user */
-        $user  = $this->userService->getUser();
-        $input = $request->only(['page_id', 'field', 'type', 'description', 'status']);
+        $user             = $this->userService->getUser();
+        $input            = $request->only(['field', 'type', 'description', 'status']);
+        $input['page_id'] = $page_id;
         // create field
         $field = $this->customerCustomFieldRepository->create($input);
         if (empty($field)) {
@@ -73,7 +77,7 @@ class CustomerCustomFieldController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -84,7 +88,7 @@ class CustomerCustomFieldController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function edit($id)
     {
@@ -95,14 +99,16 @@ class CustomerCustomFieldController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int                      $id
+     * @param int                      @page_id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update($page_id, $id, Request $request)
     {
         /** @var \App\Models\User $user */
-        $user  = $this->userService->getUser();
-        $input = $request->only(['page_id', 'field', 'type', 'description', 'status']);
+        $user             = $this->userService->getUser();
+        $input            = $request->only(['field', 'type', 'description', 'status']);
+        $input['page_id'] = $page_id;
         // create field
         $field = null;
         $field = $this->customerCustomFieldRepository->find($id);
@@ -119,9 +125,9 @@ class CustomerCustomFieldController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy($page_id, $id)
     {
         $deleted = false;
         $field   = $this->customerCustomFieldRepository->find($id);

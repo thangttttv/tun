@@ -11,6 +11,13 @@ use LaravelRocket\Foundation\Models\Base;
  *
  * @method \App\Presenters\KeywordPresenter present()
  *
+ * @property int $id
+ * @property int $message_id
+ * @property int $page_id
+ * @property int $keyword_only_status
+ * @property int $keyword_in_status
+ * @property int $keyword_a_and_b_status
+ * @property int $keyword_a_not_b_status
  */
 
 class Keyword extends Base

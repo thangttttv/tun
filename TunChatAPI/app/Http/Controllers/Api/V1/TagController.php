@@ -35,7 +35,9 @@ class TagController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param $page_id
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index($page_id)
     {
@@ -48,15 +50,17 @@ class TagController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
+     * @param $page_id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store($page_id, Request $request)
     {
         /** @var \App\Models\User $user */
-        $user  = $this->userService->getUser();
-        $input = $request->only(['page_id', 'tag']);
-	    $input["matched"] = 0;
+        $user             = $this->userService->getUser();
+        $input            = $request->only(['tag']);
+        $input['matched'] = 0;
+        $input['page_id'] =$page_id;
         // create tag
         $tag = $this->tagRepository->create($input);
         if (empty($tag)) {
@@ -67,41 +71,55 @@ class TagController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Customer remove tag
      *
      * @param int $customer_id
      * @param int $tag_id
+     * @param int $page_id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function removeTag($customer_id,$tag_id)
+    public function removeTag($page_id, $tag_id, Request $request)
     {
-	    $tagCustomer = $this->tagCustomerRepository->findByTagIdAndCustomerId($tag_id,$customer_id);
-	    if(!empty($tagCustomer)){
-		    $this->tagCustomerRepository->delete($tagCustomer);
-		    return Status::ok("Tag remove success")->response();
-	    }else{
-		    return Status::error("unknown","Tag remove failed")->response();
-	    }
+        $customer_ids = $request->get('customer_ids', []);
+        if (empty($customer_ids)) {
+            throw new APIErrorException('unknown', 'Customer not choice', []);
+        }
+
+        foreach ($customer_ids as $customer_id) {
+            $customerTag = $this->tagCustomerRepository->findByCustomerIdAndTagId($customer_id, $tag_id);
+            if (empty($customerTag)) {
+                $this->tagCustomerRepository->delete($customerTag);
+            }
+        }
+
+        return Status::ok('Tag remove success')->response();
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Customer add tag
      *
-     * @param int $customer_id
-     * @param int $tag_id
+     * @param Request $request
+     * @param int     $tag_id
+     * @param int     $page_id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function tag($customer_id,$tag_id)
+    public function tag($page_id, $tag_id, Request $request)
     {
-        $tagCustomer = $this->tagCustomerRepository->create(["customer_id"=>$customer_id,"tag_id"=>$tag_id]);
-        if(empty($tagCustomer)){
-        	return Status::error("unknown","Tag failed")->response();
-        }else{
-        	// count update
-	        return Status::ok("Tag success")->response();
+        $customer_ids = $request->get('customer_ids', []);
+        if (empty($customer_ids)) {
+            throw new APIErrorException('unknown', 'Customer not choice', []);
         }
+
+        foreach ($customer_ids as $customer_id) {
+            $customerTag = $this->tagCustomerRepository->findByCustomerIdAndTagId($customer_id, $tag_id);
+            if (empty($customerTag)) {
+                $this->tagCustomerRepository->create(['tag_id'=>$tag_id, 'customer_id'=>$customer_id]);
+            }
+        }
+
+        return Status::ok('Tag success')->response();
     }
 
     /**
@@ -109,19 +127,21 @@ class TagController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int                      $id
+     * @param int                      $page_id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update($page_id, $id, Request $request)
     {
         /** @var \App\Models\User $user */
-        $user  = $this->userService->getUser();
-        $input = $request->only(['page_id', 'tag']);
+        $user             = $this->userService->getUser();
+        $input            = $request->only(['tag']);
+        $input['page_id'] = $page_id;
         // update tag
         $tag = null;
         $tag = $this->tagRepository->find($id);
-        if(!empty($tag)){
-	        $tag = $this->tagRepository->update($tag, $input);
+        if (!empty($tag)) {
+            $tag = $this->tagRepository->update($tag, $input);
         }
 
         if (empty($tag)) {
@@ -135,10 +155,11 @@ class TagController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
+     * @param int $page_id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy($page_id, $id)
     {
         $deleted = false;
         $tag     = $this->tagRepository->find($id);

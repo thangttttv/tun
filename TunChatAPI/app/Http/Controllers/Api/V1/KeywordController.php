@@ -11,6 +11,8 @@ use App\Http\Responses\Api\V1\KeywordAction;
 use App\Http\Responses\Api\V1\Keywords;
 use App\Http\Responses\Api\V1\Status;
 use App\Repositories\ActionRepositoryInterface;
+use App\Repositories\CustomerCustomFieldRepositoryInterface;
+use App\Repositories\CustomerRepositoryInterface;
 use App\Repositories\KeywordActionRepositoryInterface;
 use App\Repositories\KeywordRepositoryInterface;
 use App\Repositories\MessageRepositoryInterface;
@@ -38,6 +40,12 @@ class KeywordController extends Controller
     /** @var \App\Repositories\SequenceRepositoryInterface */
     protected $sequenceRepository;
 
+    /** @var \App\Repositories\CustomerCustomFieldRepositoryInterface */
+    protected $customerCustomFieldRepository;
+
+    /** @var \App\Repositories\CustomerRepositoryInterface */
+    protected $customerRepository;
+
     /** @var APIUserServiceInterface */
     protected $userService;
 
@@ -48,15 +56,19 @@ class KeywordController extends Controller
         ActionRepositoryInterface $actionRepository,
         TagRepositoryInterface $tagRepository,
         SequenceRepositoryInterface $sequenceRepository,
+        CustomerCustomFieldRepositoryInterface $customerCustomFieldRepository,
+        CustomerRepositoryInterface $customerRepository,
         APIUserServiceInterface $userService
     ) {
-        $this->keywordRepository                    = $keywordRepository;
-        $this->userService                          = $userService;
-        $this->keywordActionRepository              = $keywordActionRepository;
-        $this->messageRepository                    = $messageRepository;
-        $this->actionRepository                     = $actionRepository;
-        $this->tagRepository                        = $tagRepository;
-        $this->sequenceRepository                   = $sequenceRepository;
+        $this->keywordRepository                               = $keywordRepository;
+        $this->userService                                     = $userService;
+        $this->keywordActionRepository                         = $keywordActionRepository;
+        $this->messageRepository                               = $messageRepository;
+        $this->actionRepository                                = $actionRepository;
+        $this->tagRepository                                   = $tagRepository;
+        $this->sequenceRepository                              = $sequenceRepository;
+        $this->customerCustomFieldRepository                   = $customerCustomFieldRepository;
+        $this->customerRepository                              = $customerRepository;
     }
 
     public function index(PaginationRequest $request, $page_id)
@@ -249,6 +261,11 @@ class KeywordController extends Controller
             throw new APIErrorException('unknown', 'Action Not Found', []);
         }
 
+        $keyAction=$this->keywordActionRepository->findByKeywordIdAndActionId($id, $action_id);
+        if ($keyAction != null) {
+            throw new APIErrorException('unknown', 'Action had assign', []);
+        }
+
         $keyAction = null;
         switch ($action->code) {
             case 'TAG_ADD':
@@ -258,34 +275,147 @@ class KeywordController extends Controller
                     throw new APIErrorException('unknown', 'Tag Not Found', []);
                 }
                 $obj        = (object) ['tag_id' => $tag_id];
-                $parameters = json_encode($obj);
-                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id, 'parameters'                                                => $parameters]);
+                $objPara    = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters = json_encode($objPara);
+
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
             case 'TAG_REMOVE':
-                $keyword_action_id               = $request->get('keyword_action_id');
-                $keyAction                       = $this->keywordActionRepository->find($keyword_action_id);
-                if (empty($keyAction)) {
-                    throw new APIErrorException('unknown', 'Action not available', []);
+                $tag_id               = $request->get('tag_id');
+                $tag                  = $this->tagRepository->find($tag_id);
+                if (empty($tag)) {
+                    throw new APIErrorException('unknown', 'Tag Not Found', []);
                 }
+                $obj        = (object) ['tag_id' => $tag_id];
+                $objPara    = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters = json_encode($objPara);
 
-                $this->keywordActionRepository->delete($keyAction);
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
             case 'SEQ_SUB':
+                $seq_id               = $request->get('seq_id');
+                $seq                  = $this->sequenceRepository->find($seq_id);
+                if (empty($seq)) {
+                    throw new APIErrorException('unknown', 'Sequence Not Found', []);
+                }
+                $obj        = (object) ['seq_id' => $seq_id];
+                $objPara    = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters = json_encode($objPara);
+
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
             case 'SEQ_UNSUB':
+                $seq_id               = $request->get('seq_id');
+                $seq                  = $this->sequenceRepository->find($seq_id);
+                if (empty($seq)) {
+                    throw new APIErrorException('unknown', 'Sequence Not Found', []);
+                }
+                $obj        = (object) ['seq_id' => $seq_id];
+                $objPara    = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters = json_encode($objPara);
+
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
             case 'CONVERSATION_OPEN':
+                $user_facebook_id               = $request->get('user_facebook_id');
+                $obj                            = (object) ['user_facebook_id' => $user_facebook_id];
+                $objPara                        = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters                     = json_encode($objPara);
+
+                $keyAction                      = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                                      => $parameters, ]);
                 break;
             case 'ADMIN_NOTIFY':
+                $content_notify               = $request->get('content_notify');
+                $user_ids                     = $request->get('user_ids', []);
+                $is_emails                    = $request->get('is_emails', []);
+                $is_messengers                = $request->get('is_messengers', []);
+
+                if (empty($content_notify)) {
+                    throw new APIErrorException('unknown', 'Content notify not blank', []);
+                }
+
+                if (count($user_ids) == 0) {
+                    throw new APIErrorException('unknown', 'Admin user not choice', []);
+                }
+
+                $i = 0;
+
+                foreach ($user_ids as $user_id) {
+                    if (intval($user_id) > 0) {
+                        if (intval($is_emails[$i]) == 0 && intval($is_messengers[$i]) == 0) {
+                            throw new APIErrorException('unknown', 'Notify message or email must choice', []);
+                        }
+                    }
+                    $i++;
+                }
+
+                $i          = 0;
+                $parameters = [];
+                foreach ($user_ids as $user_id) {
+                    if (intval($user_id) > 0) {
+                        $obj            = (object) ['user_id' => $user_id, 'is_email' => $is_emails[$i], 'is_messenger' => $is_messengers[$i]];
+                        $parameters[$i] = $obj;
+                    }
+                    $i++;
+                }
+
+                $objPara    = (object) ['action' => $action->code, 'data'=>$parameters];
+                $parameters = json_encode($objPara);
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
             case 'CUSTOM_FIELD_SET':
+                $field_id                  = $request->get('field_id');
+                $field_value               = $request->get('field_value');
+                $field                     = $this->customerCustomFieldRepository->find($field_id);
+                if (empty($field)) {
+                    throw new APIErrorException('unknown', 'Field not found', []);
+                }
+                if (empty($field_value)) {
+                    throw new APIErrorException('unknown', 'Field value not blank.', []);
+                }
+                $obj        = (object) ['field_id' => $field_id, 'field_value'=>$field_value];
+                $objPara    = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters = json_encode($objPara);
+
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
             case 'CUSTOM_FIELD_CLEAR':
+                $field_id               = $request->get('field_id');
+                $field                  = $this->customerCustomFieldRepository->find($field_id);
+                if (empty($field)) {
+                    throw new APIErrorException('unknown', 'Field not found', []);
+                }
+                $obj        = (object) ['field_id' => $field_id];
+                $objPara    = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters = json_encode($objPara);
+
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
             case 'BOT_SUB':
+                $obj        = (object) ['subscribe' => 'true'];
+                $objPara    = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters = json_encode($objPara);
+
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
             case 'BOT_UNSUB':
+                $obj        = (object) ['unSubscribe' => 'true'];
+                $objPara    = (object) ['action' => $action->code, 'data'=>$obj];
+                $parameters = json_encode($objPara);
+
+                $keyAction  = $this->keywordActionRepository->create(['keyword_id'=> $id, 'action_id'=>$action_id,
+                    'parameters'                                                  => $parameters, ]);
                 break;
+
         }
 
         if (empty($keyAction)) {

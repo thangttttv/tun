@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\APIErrorException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\PaginationCustomerRequest;
+use App\Http\Requests\Api\V1\PaginationRequest;
 use App\Http\Responses\Api\V1\Feed;
 use App\Http\Responses\Api\V1\Feeds;
 use App\Http\Responses\Api\V1\Status;
@@ -71,11 +71,10 @@ class FeedController extends Controller
         }
     }
 
-    public function index(PaginationCustomerRequest $request)
+    public function index($page_id, PaginationRequest $request)
     {
         $offset             = $request->offset();
         $limit              = $request->limit();
-        $page_id            = $request->get('page_id');
         $filters            = [];
         $filters['page_id'] = $page_id;
 
@@ -90,11 +89,12 @@ class FeedController extends Controller
         return Feeds::updateListWithModel($feeds, $offset, $limit, $hasNext)->response();
     }
 
-    public function store(Request $request)
+    public function store($page_id, Request $request)
     {
         /** @var \App\Models\User $user */
         $user             = $this->userService->getUser();
-        $input            = $request->only(['page_id', 'message', 'link', 'name', 'caption', 'published', 'full_picture']);
+        $input            = $request->only(['message', 'link', 'name', 'caption', 'published', 'full_picture']);
+        $input['page_id'] = $page_id;
         $fbToken          = $request->get('facebook_token');
         $facebook_page_id = $request->get('facebook_page_id');
 
@@ -123,7 +123,7 @@ class FeedController extends Controller
         }
     }
 
-    public function update($id, Request $request)
+    public function update($page_id, $id, Request $request)
     {
         $feed    = $this->feedRepository->find($id);
         $input   = $request->only(['facebook_token']);
@@ -150,7 +150,7 @@ class FeedController extends Controller
         return Status::error('unknown', 'Delete Update success')->response();
     }
 
-    public function destroy($id, Request $request)
+    public function destroy($page_id, $id, Request $request)
     {
         $feed    = $this->feedRepository->find($id);
         $fbToken = $request->get('facebook_token');
