@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\APIErrorException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\FeedRequest;
 use App\Http\Requests\Api\V1\PaginationRequest;
 use App\Http\Responses\Api\V1\Feed;
 use App\Http\Responses\Api\V1\Feeds;
@@ -89,18 +90,23 @@ class FeedController extends Controller
         return Feeds::updateListWithModel($feeds, $offset, $limit, $hasNext)->response();
     }
 
-    public function store($page_id, Request $request)
+    public function store($page_id, FeedRequest $request)
     {
         /** @var \App\Models\User $user */
         $user             = $this->userService->getUser();
         $input            = $request->only(['message', 'link', 'name', 'caption', 'published', 'full_picture']);
         $input['page_id'] = $page_id;
         $fbToken          = $request->get('facebook_token');
-        $facebook_page_id = $request->get('facebook_page_id');
+        //$facebook_page_id = $request->get('facebook_page_id');
 
         // post feed
         try {
-            $body    = $this->fb->post('/'.$facebook_page_id.'/feed', $input, $fbToken)->getBody();
+        	$page = $this->pageRepository->find($page_id);
+        	if(empty($page)){
+		        throw new APIErrorException('unknown', 'Page Not Found', []);
+	        }
+	        $facebook_page_id = $page->facebook_id;
+        	$body    = $this->fb->post('/'.$facebook_page_id.'/feed', $input, $fbToken)->getBody();
             $feedRes = \GuzzleHttp\json_decode($body);
 
             if (isset($feedRes->id)) {
@@ -123,10 +129,10 @@ class FeedController extends Controller
         }
     }
 
-    public function update($page_id, $id, Request $request)
+    public function update($page_id, $id, FeedRequest $request)
     {
         $feed    = $this->feedRepository->find($id);
-        $input   = $request->only(['facebook_token']);
+        $input   = $request->get('facebook_token');
         $fbToken = $input['facebook_token'];
 
         $input = $request->only(['message', 'link', 'name', 'caption', 'published', 'full_picture']);
@@ -154,6 +160,9 @@ class FeedController extends Controller
     {
         $feed    = $this->feedRepository->find($id);
         $fbToken = $request->get('facebook_token');
+        if(empty($fbToken)){
+	        throw new APIErrorException('wrongParameter', 'Facebook Token Not Blank', []);
+        }
         try {
             $body    = $this->fb->delete('/'.$feed->feed_facebook_id, [], $fbToken)->getBody();
             $feedRes = \GuzzleHttp\json_decode($body);

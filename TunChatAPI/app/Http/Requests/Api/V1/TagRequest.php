@@ -2,12 +2,12 @@
 /**
  * Created by PhpStorm.
  * User: ThangTT
- * Date: 06/11/2017
- * Time: 11:31 CH.
+ * Date: 18/11/2017
+ * Time: 11:44 CH.
  */
 namespace App\Http\Requests\Api\V1;
 
-class PageSubcribedRequest extends Request
+class TagRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,16 +27,17 @@ class PageSubcribedRequest extends Request
     public function rules()
     {
         return [
-            'page_facebook_id'                  => 'required',
-            'access_token'                      => 'required',
+
+            'tag'                          => 'required|max:50',
+
         ];
     }
 
     public function messages()
     {
         return [
-            'page_facebook_id.required'                  => trans('validation.required'),
-            'access_token.required'                      => trans('validation.required'),
+            'tag.required'                           => trans('validation.required'),
+            'tag.max'                                => trans('validation.max.string'),
 
         ];
     }

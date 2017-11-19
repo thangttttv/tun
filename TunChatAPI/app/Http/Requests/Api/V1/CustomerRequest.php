@@ -27,10 +27,10 @@ class CustomerRequest extends Request
     public function rules()
     {
         return [
-            'page_id'              => 'required|numeric',
             'facebook_id'          => 'required|max:50',
             'name'                 => 'required|max:250',
             'email'                => 'email',
+            'mobile'               => 'max:25',
             'gender'               => 'in:male,female',
             'avatar_url'           => 'url',
             'subscribed'           => 'numeric',
@@ -41,17 +41,18 @@ class CustomerRequest extends Request
     public function messages()
     {
         return [
-            'page_id.required'               => trans('validation.required'),
-            'page_id.numeric'                => trans('validation.numeric'),
-            'facebook_id.required'           => trans('validation.required'),
-            'facebook_id.max'                => trans('validation.max.string'),
-            'name.required'                  => trans('validation.required'),
-            'name.max'                       => trans('validation.max.string'),
-            'email.email'                    => trans('validation.email'),
-            'gender.in'                      => trans('validation.in'),
-            'avatar_url.url'                 => trans('validation.url'),
-            'subscribed.numeric'             => trans('validation.numeric'),
-            'can_reply.numeric'              => trans('validation.numeric'),
+            'page_id.required'                 => trans('validation.required'),
+            'page_id.numeric'                  => trans('validation.numeric'),
+            'facebook_id.required'             => trans('validation.required'),
+            'facebook_id.max'                  => trans('validation.max.string'),
+            'name.required'                    => trans('validation.required'),
+            'name.max'                         => trans('validation.max.string'),
+            'mobile.max'                       => trans('validation.max.string'),
+            'email.email'                      => trans('validation.email'),
+            'gender.in'                        => trans('validation.in'),
+            'avatar_url.url'                   => trans('validation.url'),
+            'subscribed.numeric'               => trans('validation.numeric'),
+            'can_reply.numeric'                => trans('validation.numeric'),
 
         ];
     }

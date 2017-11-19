@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\APIErrorException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\TagRequest;
 use App\Http\Responses\Api\V1\Status;
 use App\Http\Responses\Api\V1\Tag;
 use App\Http\Responses\Api\V1\Tags;
@@ -54,7 +55,7 @@ class TagController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store($page_id, Request $request)
+    public function store($page_id, TagRequest $request)
     {
         /** @var \App\Models\User $user */
         $user             = $this->userService->getUser();
@@ -131,7 +132,7 @@ class TagController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($page_id, $id, Request $request)
+    public function update($page_id, $id, TagRequest $request)
     {
         /** @var \App\Models\User $user */
         $user             = $this->userService->getUser();

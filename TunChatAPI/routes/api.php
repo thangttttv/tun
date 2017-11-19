@@ -3,7 +3,6 @@
 Route::group(['prefix' => 'api', 'as' => 'api.', 'namespace' => 'Api'], function () {
     Route::group(['prefix' => 'v1', 'as' => 'v1.', 'namespace' => 'V1'], function () {
         Route::get('status', 'IndexController@status');
-        Route::get('/page', 'PageController@index');
 
         Route::post('signup', 'AuthController@postSignUp');
         Route::post('signin', 'AuthController@postSignIn');
@@ -13,10 +12,11 @@ Route::group(['prefix' => 'api', 'as' => 'api.', 'namespace' => 'Api'], function
         Route::post('forgot-password', 'PasswordController@forgotPassword');
 
         Route::group(['middleware' => 'api.client'], function () {
-            // thong ke
+
         });
 
         Route::group(['middleware' => 'api.auth'], function () {
+	        Route::get('/page', 'PageController@index');
             Route::post('/page/subscribed', 'PageController@subscribed');
             Route::post('/page/unSubscribed', 'PageController@unSubscribed');
 

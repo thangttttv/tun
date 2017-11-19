@@ -53,7 +53,7 @@ class PageController extends Controller
 		/** @var \App\Models\User $user */
 		//$user  = $this->userService->getUser();
 
-		$pageId = $request->get("page_id");
+		$pageId = $request->get("page_facebook_id");
 		$accessToken = $request->get("access_token");
 		$fb = new Facebook([
 			'app_id'     => config('services.facebook.client_id'),
@@ -82,7 +82,7 @@ class PageController extends Controller
 	//unSubscribed page
 	public function unSubscribed(PageSubcribedRequest $request)
 	{
-		$pageId = $request->get("page_id");
+		$pageId = $request->get("page_facebook_id");
 		$accessToken = $request->get("access_token");
 		$fb = new Facebook([
 			'app_id'     => config('services.facebook.client_id'),

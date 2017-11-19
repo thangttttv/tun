@@ -340,7 +340,7 @@ class KeywordController extends Controller
                 }
 
                 if (count($user_ids) == 0) {
-                    throw new APIErrorException('unknown', 'Admin user not choice', []);
+                    throw new APIErrorException('unknown', 'Admin not choice', []);
                 }
 
                 $i = 0;
