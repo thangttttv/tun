@@ -28,6 +28,7 @@ class FirebaseService extends BaseService implements FirebaseServiceInterface
         GroupRepositoryInterface $groupRepository,
         UserRepositoryInterface $userRepository
     ) {
+    	
         $this->firebase       =new FirebaseLib(config('services.firebase.firebase_url'), config('services.firebase.firebase_token'));
         $this->groupRepository=$groupRepository;
         $this->userRepository =$userRepository;
