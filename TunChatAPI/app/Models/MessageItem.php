@@ -7,13 +7,13 @@ use LaravelRocket\Foundation\Models\Base;
 
 
 /**
- * App\Models\Message.
+ * App\Models\MessageItem.
  *
- * @method \App\Presenters\MessagePresenter present()
+ * @method \App\Presenters\MessageItemPresenter present()
  *
  */
 
-class Message extends Base
+class MessageItem extends Base
 {
 
     
@@ -22,7 +22,7 @@ class Message extends Base
      *
      * @var string
      */
-    protected $table = 'messages';
+    protected $table = 'message_items';
 
     /**
      * The attributes that are mass assignable.
@@ -30,12 +30,9 @@ class Message extends Base
      * @var array
      */
     protected $fillable = [
-        'page_id',
-        'title',
-        'sent',
-        'delivered',
-        'opened',
-        'clicked',
+        'message_id',
+	    'type',
+        'message',
     ];
 
     /**
@@ -47,12 +44,12 @@ class Message extends Base
 
     protected $dates  = [];
 
-    protected $presenter = \App\Presenters\MessagePresenter::class;
+    protected $presenter = \App\Presenters\MessageItemPresenter::class;
 
     // Relations
-        public function page()
+        public function message()
     {
-        return $this->belongsTo(\App\Models\Page::class, 'page_id', 'id');
+        return $this->belongsTo(\App\Models\Message::class, 'message_id', 'id');
     }
 
 

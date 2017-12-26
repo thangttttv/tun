@@ -62,6 +62,8 @@ Route::group(['prefix' => 'api', 'as' => 'api.', 'namespace' => 'Api'], function
             Route::delete('/page/{page_id}/keyword/{id}/message', 'KeywordController@removeMessage');
             Route::post('/page/{page_id}/keyword/{id}/action/{action_id}', 'KeywordController@addAction');
             Route::delete('/page/{page_id}/keyword/{id}', 'KeywordController@destroy');
+			// Message
+	        Route::post('/page/{page_id}/message', 'MessageController@store');
 
             Route::post('signout', 'AuthController@postSignOut');
 

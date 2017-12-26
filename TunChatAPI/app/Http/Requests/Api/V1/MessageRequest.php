@@ -21,12 +21,12 @@ class MessageRequest extends Request
     public function rules()
     {
         return [
-            'type'          => 'required',
+            'content'          => 'required',
         ];
     }
 
     public function messages()
     {
-        return ['type.required'         => trans('validation.required')];
+        return ['content.required'         => trans('validation.required')];
     }
 }

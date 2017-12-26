@@ -925,4 +925,11 @@ $factory->define(\App\Models\KeywordAction::class, function (Faker\Generator $fa
     ];
 });
 
+$factory->define(\App\Models\MessageItem::class, function (Faker\Generator $faker) {
+    return [
+        'message_id' => 0,
+        'message' => '',
+    ];
+});
+
 /* NEW MODEL FACTORY */

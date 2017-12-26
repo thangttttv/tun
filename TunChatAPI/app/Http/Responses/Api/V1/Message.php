@@ -13,7 +13,6 @@ class Message extends Response
         'id'                                            => 0,
         'page_id'                                       => 0,
         'title'                                         => '',
-        'content'                                       => '',
         'sent'                                          => 0,
         'delivered'                                     => 0,
         'opened'                                        => 0,

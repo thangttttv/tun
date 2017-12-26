@@ -16,11 +16,11 @@ class CreateMessagesTable extends Migration
 		    $table->bigIncrements('id');
 		    $table->integer('page_id');
 		    $table->string('title', 150);
-		    $table->string('content',4000);
-		    $table->integer('sent');
-		    $table->integer('delivered');
-		    $table->integer('opened');
-		    $table->integer('clicked');
+		   // $table->string('content',4000);
+		    $table->integer('sent')->default(0);
+		    $table->integer('delivered')->default(0);
+		    $table->integer('opened')->default(0);
+		    $table->integer('clicked')->default(0);
 		    $table->timestamps();
 	    });
 	    $this->updateTimestampDefaultValue('messages', ['updated_at'], ['created_at']);
