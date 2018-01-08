@@ -32,6 +32,7 @@ class Message extends Base
     protected $fillable = [
         'page_id',
         'title',
+	    'type',
         'sent',
         'delivered',
         'opened',
