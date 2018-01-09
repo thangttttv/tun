@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ec6d011-c786-4357-8b3a-8ffdac7e346f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TunChatAPI/app/Http/Controllers/Api/V1/PageController.php" afterPath="$PROJECT_DIR$/TunChatAPI/app/Http/Controllers/Api/V1/PageController.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,8 +27,8 @@
       <file leaf-file-name="PageController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Controllers/Api/V1/PageController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="46" column="39" lean-forward="false" selection-start-line="46" selection-start-column="39" selection-end-line="46" selection-end-column="39" />
+            <state relative-caret-position="357">
+              <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
               <folding>
                 <element signature="e#47#97#0#PHP" expanded="true" />
               </folding>
@@ -613,12 +612,12 @@
       <workItem from="1515377444493" duration="4828000" />
       <workItem from="1515428714369" duration="1117000" />
       <workItem from="1515463453478" duration="1139000" />
-      <workItem from="1515513268616" duration="2266000" />
+      <workItem from="1515513268616" duration="2443000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="156157000" />
+    <option name="totallyTimeSpent" value="156334000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1284" height="776" extended-state="0" />
@@ -1035,8 +1034,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Controllers/Api/V1/PageController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="46" column="39" lean-forward="false" selection-start-line="46" selection-start-column="39" selection-end-line="46" selection-end-column="39" />
+        <state relative-caret-position="357">
+          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
           <folding>
             <element signature="e#47#97#0#PHP" expanded="true" />
           </folding>

@@ -44,7 +44,7 @@ class PageController extends Controller
 		$pages   = $fb->get('/me/accounts', $fbToken)->getBody();
 		//return \GuzzleHttp\json_decode($pages)->data;
 		//return Status::ok()->response();
-		return response()->json($pages->data, 200);
+		return response()->json(\GuzzleHttp\json_decode($pages)->data, 200);
 	}
 
 	//subscribed page
