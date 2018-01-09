@@ -27,8 +27,8 @@
       <file leaf-file-name="PageController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Controllers/Api/V1/PageController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+            <state relative-caret-position="289">
+              <caret line="44" column="8" lean-forward="false" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="8" />
               <folding>
                 <element signature="e#47#97#0#PHP" expanded="true" />
               </folding>
@@ -39,8 +39,8 @@
       <file leaf-file-name="Response.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Responses/Response.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="86" column="69" lean-forward="true" selection-start-line="86" selection-start-column="15" selection-end-line="86" selection-end-column="69" />
+            <state relative-caret-position="51">
+              <caret line="81" column="7" lean-forward="true" selection-start-line="81" selection-start-column="7" selection-end-line="81" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -48,6 +48,16 @@
       </file>
       <file leaf-file-name="Response.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Responses/Api/V1/Response.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Subscribed.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Responses/Api/V1/Subscribed.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -84,16 +94,6 @@
               <folding>
                 <element signature="e#7#48#0#PHP" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="2017_11_12_184955_create_messages_table.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TunChatAPI/database/migrations/2017_11_12_184955_create_messages_table.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="25" column="87" lean-forward="false" selection-start-line="14" selection-start-column="8" selection-end-line="25" selection-end-column="87" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -612,12 +612,12 @@
       <workItem from="1515377444493" duration="4828000" />
       <workItem from="1515428714369" duration="1117000" />
       <workItem from="1515463453478" duration="1139000" />
-      <workItem from="1515513268616" duration="2443000" />
+      <workItem from="1515513268616" duration="2564000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="156334000" />
+    <option name="totallyTimeSpent" value="156455000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1284" height="776" extended-state="0" />
@@ -656,13 +656,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Requests/Api/V1/CustomerRequest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="36" column="22" lean-forward="false" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Requests/Api/V1/FieldRequest.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -1024,18 +1017,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Responses/Api/V1/Subscribed.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Responses/Response.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="86" column="69" lean-forward="true" selection-start-line="86" selection-start-column="15" selection-end-line="86" selection-end-column="69" />
+        <state relative-caret-position="51">
+          <caret line="81" column="7" lean-forward="true" selection-start-line="81" selection-start-column="7" selection-end-line="81" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TunChatAPI/app/Http/Controllers/Api/V1/PageController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+        <state relative-caret-position="289">
+          <caret line="44" column="8" lean-forward="false" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="8" />
           <folding>
             <element signature="e#47#97#0#PHP" expanded="true" />
           </folding>

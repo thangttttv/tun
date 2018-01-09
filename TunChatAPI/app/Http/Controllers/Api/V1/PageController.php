@@ -42,9 +42,9 @@ class PageController extends Controller
 			'app_secret' => config('services.facebook.client_secret'),
 		]);
 		$pages   = $fb->get('/me/accounts', $fbToken)->getBody();
-		//return \GuzzleHttp\json_decode($pages)->data;
+		return \GuzzleHttp\json_decode($pages)->data;
 		//return Status::ok()->response();
-		return response()->json(\GuzzleHttp\json_decode($pages)->data, 200);
+		//return response()->json(\GuzzleHttp\json_decode($pages)->data, 200);
 	}
 
 	//subscribed page
